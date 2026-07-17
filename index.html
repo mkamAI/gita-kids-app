@@ -6,15 +6,17 @@
 <title>Gita Kids — Learn with Krishna & Madhwacharya</title>
 <style>
   :root{
-    --saffron:#FF8C42; --saffron-deep:#E85D04; --gold:#FFC53D; --gold-soft:#FFF3D6;
-    --blue:#2E86AB; --blue-deep:#1B4965; --blue-soft:#E8F4F8;
-    --cream:#FFF9F0; --ink:#3A2E24; --green:#5CB85C; --red:#E76F51;
+    --saffron:#1B7A8C; --saffron-deep:#12395B; --gold:#E0A526; --gold-soft:#FAF0D6;
+    --blue:#1B7A8C; --blue-deep:#12395B; --blue-soft:#E4F1F2;
+    --cream:#FDF7EC; --ink:#2E2A22; --green:#5CB85C; --red:#E76F51;
+    --lotus:#C94F7C;
+    --maroon:#6E1423; --maroon-bright:#A62639; --lamp-gold:#E8B72E; --sandal:#FAF3E3;
     --radius:20px;
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans Devanagari",sans-serif;
-    background:linear-gradient(160deg,#1B4965 0%,#2E86AB 100%);
+    background:linear-gradient(160deg,#12395B 0%,#1B7A8C 100%);
     min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:24px 10px;color:var(--ink);
   }
   .phone{
@@ -148,7 +150,7 @@
   .note{font-size:.78rem;color:#a5937e;text-align:center;margin-top:10px;font-style:italic;}
   /* Krishna hero */
   .krishna-hero{
-    background:linear-gradient(135deg,#1B4965 0%,#2E86AB 70%,#3d9bc4 100%);
+    background:linear-gradient(135deg,#12395B 0%,#1B7A8C 75%,#2b93a5 100%);
     border-radius:var(--radius);padding:20px 16px;text-align:center;color:#fff;
     margin-bottom:14px;border:2px solid var(--gold);box-shadow:0 6px 20px rgba(27,73,101,.35);
   }
@@ -183,6 +185,15 @@
   .chap summary::after{content:'▸';margin-left:auto;color:#c9b8a5;transition:transform .2s;}
   .chap[open] summary::after{transform:rotate(90deg);}
   .chap .chap-body{padding:0 14px 12px;font-size:.87rem;line-height:1.55;color:#5f5142;}
+  /* Temple lamp sanctum accents (sacred text areas) */
+  .sanskrit{background:linear-gradient(135deg,var(--sandal),#fff);border-color:var(--lamp-gold);}
+  .sanskrit .dev{color:var(--maroon);}
+  .karaoke span.hl{background:var(--maroon-bright);}
+  .chap summary{color:var(--maroon);}
+  #scr-mtn h2,#scr-mtn .guru-sec h3{color:var(--maroon);}
+  #scr-mtn .story-tag{background:var(--sandal);color:var(--maroon);}
+  #scr-mtn .tattva-card,#scr-mtn .tattva-card.blue,#scr-mtn .tattva-card.green{border-left-color:var(--maroon-bright);}
+  #scr-mtn .kh-shloka{background:var(--sandal) !important;color:var(--maroon) !important;}
   /* Gita library */
   .lib-item{cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px;transition:border-color .15s;}
   .lib-item:hover{border-color:var(--gold);}
