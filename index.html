@@ -168,6 +168,9 @@
     font-size:.88rem;line-height:1.5;border-left:4px solid var(--saffron);
   }
   .teaching b{color:var(--saffron-deep);}
+  .krishna-row{display:flex;align-items:center;justify-content:center;gap:10px;}
+  .krishna-row .emo{font-size:2rem;}
+  .krishna-svg{filter:drop-shadow(0 2px 6px rgba(0,0,0,.3));}
   /* Tier chip */
   .tier-chip{
     display:inline-block;background:var(--blue-soft);color:var(--blue-deep);border:1.5px solid #bcdcea;
@@ -227,7 +230,7 @@
   <!-- AGE PICKER -->
   <div class="screen active" id="scr-age">
     <div class="krishna-hero">
-      <div style="font-size:2.6rem">🦚🪈</div>
+      <div class="krishna-row"><span class="emo">🦚</span><svg class="krishna-svg" viewBox="0 0 100 100" width="82" height="82" role="img" aria-label="Sri Krishna"><ellipse cx="50" cy="13" rx="9" ry="12" fill="#2b93a5"/><ellipse cx="50" cy="14" rx="5.5" ry="8" fill="#12395B"/><circle cx="50" cy="16" r="3" fill="#E0A526"/><path d="M28 38 Q30 22 50 20 Q70 22 72 38 Z" fill="#E0A526"/><circle cx="50" cy="27" r="2.5" fill="#A62639"/><circle cx="39" cy="31" r="2" fill="#A62639"/><circle cx="61" cy="31" r="2" fill="#A62639"/><path d="M28 38 Q26 52 30 61 L34.5 56 Q31.5 48 32.5 38 Z" fill="#16233f"/><path d="M72 38 Q74 52 70 61 L65.5 56 Q68.5 48 67.5 38 Z" fill="#16233f"/><circle cx="50" cy="52" r="20" fill="#7FA8E8"/><path d="M46.5 37.5 Q50 45 53.5 37.5" fill="none" stroke="#F5E7C6" stroke-width="2" stroke-linecap="round"/><circle cx="43" cy="50" r="2.3" fill="#12233f"/><circle cx="57" cy="50" r="2.3" fill="#12233f"/><path d="M43 60 Q50 66.5 57 60" fill="none" stroke="#12233f" stroke-width="2.2" stroke-linecap="round"/><circle cx="29.5" cy="57" r="2.6" fill="#E0A526"/><circle cx="70.5" cy="57" r="2.6" fill="#E0A526"/></svg><span class="emo">🪈</span></div>
       <div class="kh-title">Sri Krishna — Our Ultimate Guide &amp; Protector</div>
       <div class="kh-shloka">वसुदेवसुतं देवं कंसचाणूरमर्दनम् ।<br>देवकीपरमानन्दं कृष्णं वन्दे जगद्गुरुम् ॥</div>
       <div style="font-weight:800;color:var(--gold);font-size:.92rem;margin-top:8px;letter-spacing:.4px">हरि सर्वोत्तम · वायु जीवोत्तम<br>Hari Sarvottama · Vayu Jeevottama</div>
@@ -254,7 +257,7 @@
   <!-- HOME -->
   <div class="screen" id="scr-home">
     <div class="krishna-hero" style="padding:14px 16px">
-      <div style="font-size:1.9rem">🦚🪈</div>
+      <div class="krishna-row" style="gap:8px"><span class="emo" style="font-size:1.5rem">🦚</span><svg class="krishna-svg" viewBox="0 0 100 100" width="54" height="54" role="img" aria-label="Sri Krishna"><ellipse cx="50" cy="13" rx="9" ry="12" fill="#2b93a5"/><ellipse cx="50" cy="14" rx="5.5" ry="8" fill="#12395B"/><circle cx="50" cy="16" r="3" fill="#E0A526"/><path d="M28 38 Q30 22 50 20 Q70 22 72 38 Z" fill="#E0A526"/><circle cx="50" cy="27" r="2.5" fill="#A62639"/><circle cx="39" cy="31" r="2" fill="#A62639"/><circle cx="61" cy="31" r="2" fill="#A62639"/><path d="M28 38 Q26 52 30 61 L34.5 56 Q31.5 48 32.5 38 Z" fill="#16233f"/><path d="M72 38 Q74 52 70 61 L65.5 56 Q68.5 48 67.5 38 Z" fill="#16233f"/><circle cx="50" cy="52" r="20" fill="#7FA8E8"/><path d="M46.5 37.5 Q50 45 53.5 37.5" fill="none" stroke="#F5E7C6" stroke-width="2" stroke-linecap="round"/><circle cx="43" cy="50" r="2.3" fill="#12233f"/><circle cx="57" cy="50" r="2.3" fill="#12233f"/><path d="M43 60 Q50 66.5 57 60" fill="none" stroke="#12233f" stroke-width="2.2" stroke-linecap="round"/><circle cx="29.5" cy="57" r="2.6" fill="#E0A526"/><circle cx="70.5" cy="57" r="2.6" fill="#E0A526"/></svg><span class="emo" style="font-size:1.5rem">🪈</span></div>
       <div class="kh-title" style="margin:4px 0 4px">Sri Krishna — Our Ultimate Guide &amp; Protector</div>
       <div style="font-weight:800;color:var(--gold);font-size:.85rem;letter-spacing:.4px">Hari Sarvottama · Vayu Jeevottama</div>
       <div class="kh-sub" style="margin-top:2px">कृष्णं वन्दे जगद्गुरुम् — I bow to Krishna, teacher of the world</div>
@@ -477,7 +480,7 @@
   <div class="screen" id="scr-gurus">
     <button class="back" onclick="go('scr-home')">‹ Home</button>
     <div class="krishna-hero">
-      <div style="font-size:2.2rem">🦚🪈</div>
+      <div class="krishna-row"><span class="emo" style="font-size:1.7rem">🦚</span><svg class="krishna-svg" viewBox="0 0 100 100" width="64" height="64" role="img" aria-label="Sri Krishna"><ellipse cx="50" cy="13" rx="9" ry="12" fill="#2b93a5"/><ellipse cx="50" cy="14" rx="5.5" ry="8" fill="#12395B"/><circle cx="50" cy="16" r="3" fill="#E0A526"/><path d="M28 38 Q30 22 50 20 Q70 22 72 38 Z" fill="#E0A526"/><circle cx="50" cy="27" r="2.5" fill="#A62639"/><circle cx="39" cy="31" r="2" fill="#A62639"/><circle cx="61" cy="31" r="2" fill="#A62639"/><path d="M28 38 Q26 52 30 61 L34.5 56 Q31.5 48 32.5 38 Z" fill="#16233f"/><path d="M72 38 Q74 52 70 61 L65.5 56 Q68.5 48 67.5 38 Z" fill="#16233f"/><circle cx="50" cy="52" r="20" fill="#7FA8E8"/><path d="M46.5 37.5 Q50 45 53.5 37.5" fill="none" stroke="#F5E7C6" stroke-width="2" stroke-linecap="round"/><circle cx="43" cy="50" r="2.3" fill="#12233f"/><circle cx="57" cy="50" r="2.3" fill="#12233f"/><path d="M43 60 Q50 66.5 57 60" fill="none" stroke="#12233f" stroke-width="2.2" stroke-linecap="round"/><circle cx="29.5" cy="57" r="2.6" fill="#E0A526"/><circle cx="70.5" cy="57" r="2.6" fill="#E0A526"/></svg><span class="emo" style="font-size:1.7rem">🪈</span></div>
       <div class="kh-title">Sri Krishna — The Supreme Lord</div>
       <div class="kh-sub">Everything begins with Sri Hari. Our gurus lived only to show us His greatness and lead us safely to His lotus feet.</div>
     </div>
