@@ -303,6 +303,11 @@
       <div><h3>Learn Shlokas</h3><p>5 gems from the Gita, with karaoke chanting</p></div>
       <span class="arrow">›</span>
     </div>
+    <div class="card menu-card" onclick="openVayu()">
+      <div class="menu-icon" style="background:#e8f7f0">💨</div>
+      <div><h3>Vayu Stuti</h3><p>All 41 verses + Nakha Stuti, with chant-along</p></div>
+      <span class="arrow">›</span>
+    </div>
     <div class="card menu-card" onclick="openLibrary()">
       <div class="menu-icon" style="background:#e8f0ff">📚</div>
       <div><h3>Full Gita Library</h3><p>All 18 chapters · 700 shlokas with meanings</p></div>
@@ -343,6 +348,7 @@
     </div>
     <p class="note">Prototype — progress resets when you close the page.</p>
     <a href="mailto:maruti.kampli@gmail.com?subject=Gita%20Kids%20app%20feedback&body=What%20I%20liked%3A%0A%0AWhat%20confused%20me%3A%0A%0AWhat%20I%20wish%20it%20had%3A%0A%0AWho%20tried%20it%20(age)%3A%0A" style="display:block;text-align:center;margin:4px 0 10px;color:var(--blue-deep);font-weight:700;font-size:.88rem;text-decoration:none;background:var(--blue-soft);border-radius:12px;padding:11px;">💬 Send feedback</a>
+    <p class="note" style="margin-top:2px">© 2026 Maruti Kampli. All rights reserved.</p>
   </div>
 
   <!-- SHLOKA LIST -->
@@ -565,6 +571,19 @@
     <div class="verse-grid" id="verse-grid"></div>
   </div>
 
+  <!-- VAYU STUTI -->
+  <div class="screen" id="scr-vayu">
+    <button class="back" onclick="go('scr-home')">‹ Home</button>
+    <h2>Sri Hari Vayu Stuti 💨</h2>
+    <p class="subtitle">By Sri Trivikrama Panditacharya — 41 verses in the majestic Sragdhara metre, praising Vayu's three avatars: Hanuman, Bhima, and Sri Madhwacharya.</p>
+    <div class="card guru-sec">
+      <h3>🛡️ Why it begins with the Nakha Stuti</h3>
+      <p>Sri Madhwacharya himself added two verses praising the mighty claws of <b>Lord Narasimha</b> — chanted at the start and end of the Vayu Stuti as a shield of protection. Tap N1 and N2 to begin the traditional way!</p>
+    </div>
+    <div class="verse-grid" id="vayu-grid"></div>
+    <p class="note">Sanskrit text: sanskritdocuments.org (proofread by dvaita.org). Verse themes simplified for kids — full word-by-word meanings after scholar review.</p>
+  </div>
+
   <!-- GITA LIBRARY: VERSE -->
   <div class="screen" id="scr-verse">
     <button class="back" id="verse-back" onclick="go('scr-chapter')">‹ Chapter</button>
@@ -588,6 +607,7 @@
 </div>
 
 <script src="verses.js"></script>
+<script src="vayu.js"></script>
 <script>
 /* ---------- state (in-memory) ---------- */
 var state={tier:'explorer',points:0,streak:1,shlokasDone:{},storyDone:false,quizBest:0,dvaitaDone:false};
@@ -873,6 +893,8 @@ function openVerse(c,v){
     +(v>1||c>1?'<button class="btn btn-ghost" onclick="navVerse(-1)">‹ Prev</button>':'')
     +(v<list.length||c<18?'<button class="btn btn-primary" onclick="navVerse(1)">Next ›</button>':'')
     +'</div>';
+  $('verse-back').setAttribute('onclick',"stopLibKaraoke();go('scr-chapter')");
+  $('verse-back').textContent='‹ Chapter';
   $('verse-body').innerHTML=h;
   go('scr-verse');
 }
@@ -901,6 +923,41 @@ function stopLibKaraoke(){
   if(lkTimer){clearTimeout(lkTimer);lkTimer=null;}
   var b=$('lkBtn');if(b)b.textContent='▶ Chant Along';
   lkWords.forEach(function(_,j){var el=$('lkw'+j);if(el)el.className='';});
+}
+
+/* ---------- Vayu Stuti ---------- */
+function openVayu(){
+  if(typeof VAYU==='undefined'){toast('Vayu Stuti data (vayu.js) not found next to this file');return;}
+  var h='';
+  VAYU.forEach(function(v,i){
+    h+='<button class="verse-btn" onclick="openVayuVerse('+i+')">'+v.n+'</button>';
+  });
+  $('vayu-grid').innerHTML=h;
+  go('scr-vayu');
+}
+function openVayuVerse(i){
+  stopLibKaraoke();
+  var v=VAYU[i];
+  if(!v)return;
+  lkWords=v.t.replace(/\s+/g,' ').trim().split(' ');
+  var wordsHtml=lkWords.map(function(w,j){return '<span id="lkw'+j+'">'+w+'</span>';}).join(' ');
+  var title=v.n.charAt(0)==='N'?'Nakha Stuti · verse '+v.n.slice(1):'Vayu Stuti · verse '+v.n;
+  var h='<h2>'+title+'</h2>'
+    +'<div class="sanskrit"><div class="dev" style="font-size:1.02rem;line-height:1.9">'+v.d+'</div>'
+    +'<div class="karaoke" id="lib-karaoke" style="font-size:.92rem">'+wordsHtml+'</div></div>'
+    +'<div class="controls">'
+    +'<button class="btn btn-primary" id="lkBtn" onclick="toggleLibKaraoke()">▶ Chant Along</button>'
+    +'<div class="speed">🐢<input type="range" id="lkspeed" min="300" max="900" value="500" step="50">🐇</div>'
+    +'</div>'
+    +'<div class="card meaning-box"><h4>💛 What this verse celebrates</h4><p>'+v.m+'</p></div>'
+    +'<div class="verse-nav">'
+    +(i>0?'<button class="btn btn-ghost" onclick="openVayuVerse('+(i-1)+')">‹ Prev</button>':'')
+    +(i<VAYU.length-1?'<button class="btn btn-primary" onclick="openVayuVerse('+(i+1)+')">Next ›</button>':'')
+    +'</div>';
+  $('verse-back').setAttribute('onclick',"stopLibKaraoke();go('scr-vayu')");
+  $('verse-back').textContent='‹ Vayu Stuti';
+  $('verse-body').innerHTML=h;
+  go('scr-verse');
 }
 
 /* init */
