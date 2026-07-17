@@ -168,6 +168,26 @@
     font-size:.88rem;line-height:1.5;border-left:4px solid var(--saffron);
   }
   .teaching b{color:var(--saffron-deep);}
+  /* Star burst reward animation */
+  .star-p{
+    position:absolute;pointer-events:none;z-index:70;font-size:20px;left:0;top:0;
+    animation:starfly var(--dur,.9s) cubic-bezier(.2,.7,.4,1) forwards;
+  }
+  @keyframes starfly{
+    0%{transform:translate(var(--x),var(--y)) scale(.4) rotate(0deg);opacity:1;}
+    70%{opacity:1;}
+    100%{transform:translate(calc(var(--x) + var(--dx)),calc(var(--y) + var(--dy))) scale(1.15) rotate(var(--rot));opacity:0;}
+  }
+  /* Little Sprout mode: rounded, larger, friendlier type */
+  .phone.sprout{font-family:ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold","Nunito",-apple-system,BlinkMacSystemFont,"Noto Sans Devanagari",sans-serif;}
+  .phone.sprout h2{font-size:1.5rem;}
+  .phone.sprout .subtitle{font-size:1rem;}
+  .phone.sprout .menu-card h3{font-size:1.18rem;}
+  .phone.sprout .menu-card p{font-size:.95rem;}
+  .phone.sprout .card p,.phone.sprout .meaning-box p,.phone.sprout .story-page p{font-size:1.08rem;line-height:1.75;}
+  .phone.sprout .btn{font-size:1.1rem;padding:15px 24px;}
+  .phone.sprout .story-art{font-size:5rem;}
+  .phone.sprout .menu-icon{width:60px;height:60px;font-size:1.95rem;}
   .krishna-row{display:flex;align-items:center;justify-content:center;gap:10px;}
   .krishna-row .emo{font-size:2rem;}
   .krishna-svg{filter:drop-shadow(0 2px 6px rgba(0,0,0,.3));}
@@ -700,7 +720,34 @@ function toast(msg){
   var t=$('toast');t.textContent=msg;t.classList.add('show');
   clearTimeout(t._tm);t._tm=setTimeout(function(){t.classList.remove('show');},2200);
 }
-function addPoints(n){state.points+=n;$('points').textContent=state.points;}
+var lastTap={x:210,y:400};
+document.addEventListener('click',function(e){
+  var r=document.querySelector('.phone').getBoundingClientRect();
+  lastTap={x:e.clientX-r.left,y:e.clientY-r.top};
+},true);
+function starBurst(x,y){
+  var phone=document.querySelector('.phone');
+  var stars=['⭐','✨','🌟','💛'];
+  for(var i=0;i<14;i++){
+    var s=document.createElement('span');
+    s.className='star-p';
+    s.textContent=stars[Math.floor(Math.random()*stars.length)];
+    var ang=Math.random()*Math.PI*2, dist=60+Math.random()*90;
+    s.style.setProperty('--x',x+'px');
+    s.style.setProperty('--y',y+'px');
+    s.style.setProperty('--dx',Math.cos(ang)*dist+'px');
+    s.style.setProperty('--dy',(Math.sin(ang)*dist-30)+'px');
+    s.style.setProperty('--rot',(Math.random()*240-120)+'deg');
+    s.style.setProperty('--dur',(0.7+Math.random()*0.5)+'s');
+    s.style.fontSize=(14+Math.random()*12)+'px';
+    s.addEventListener('animationend',function(){this.remove();});
+    phone.appendChild(s);
+  }
+}
+function addPoints(n){
+  state.points+=n;$('points').textContent=state.points;
+  starBurst(lastTap.x,lastTap.y);
+}
 var tierGist={
   sprout:'🌱 Little Sprout · pictures, chant-along audio & simple meanings',
   explorer:'🚀 Explorer · shlokas, stories, quizzes & badges',
@@ -708,6 +755,7 @@ var tierGist={
 };
 function setTier(t){
   state.tier=t;
+  document.querySelector('.phone').classList.toggle('sprout',t==='sprout');
   $('home-greet').textContent='Hello, '+tierNames[t]+'!';
   $('tier-chip').textContent=tierGist[t]+' — tap to change';
   renderShlokaList();
