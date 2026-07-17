@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gita Kids — Learn with Krishna & Madhwacharya</title>
+<style>
+  :root{
+    --saffron:#FF8C42; --saffron-deep:#E85D04; --gold:#FFC53D; --gold-soft:#FFF3D6;
+    --blue:#2E86AB; --blue-deep:#1B4965; --blue-soft:#E8F4F8;
+    --cream:#FFF9F0; --ink:#3A2E24; --green:#5CB85C; --red:#E76F51;
+    --radius:20px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans Devanagari",sans-serif;
+    background:linear-gradient(160deg,#1B4965 0%,#2E86AB 100%);
+    min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:24px 10px;color:var(--ink);
+  }
+  .phone{
+    width:100%;max-width:420px;background:var(--cream);border-radius:36px;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);overflow:hidden;min-height:760px;
+    display:flex;flex-direction:column;position:relative;
+  }
+  /* Top bar */
+  .topbar{
+    background:linear-gradient(135deg,var(--saffron) 0%,var(--saffron-deep) 100%);
+    color:#fff;padding:18px 20px 14px;display:flex;justify-content:space-between;align-items:center;
+  }
+  .topbar .title{font-weight:800;font-size:1.05rem;letter-spacing:.3px;}
+  .stats{display:flex;gap:10px;font-size:.85rem;font-weight:700;}
+  .pill{background:rgba(255,255,255,.22);border-radius:999px;padding:4px 10px;}
+  .screen{flex:1;overflow-y:auto;padding:20px;display:none;animation:fade .35s ease;}
+  .screen.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  h2{color:var(--blue-deep);font-size:1.3rem;margin-bottom:4px;}
+  .subtitle{color:#8a7663;font-size:.9rem;margin-bottom:16px;}
+  /* Cards */
+  .card{
+    background:#fff;border-radius:var(--radius);padding:18px;margin-bottom:14px;
+    box-shadow:0 3px 12px rgba(58,46,36,.08);border:2px solid transparent;
+  }
+  .menu-card{display:flex;align-items:center;gap:14px;cursor:pointer;transition:transform .15s,border-color .15s;}
+  .menu-card:active{transform:scale(.97);}
+  .menu-card:hover{border-color:var(--gold);}
+  .menu-icon{
+    width:54px;height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+    font-size:1.7rem;flex-shrink:0;
+  }
+  .menu-card h3{font-size:1.02rem;color:var(--ink);}
+  .menu-card p{font-size:.82rem;color:#8a7663;margin-top:2px;}
+  .arrow{margin-left:auto;color:#c9b8a5;font-size:1.2rem;}
+  /* Buttons */
+  .btn{
+    display:inline-block;border:none;border-radius:14px;padding:13px 22px;font-size:1rem;font-weight:700;
+    cursor:pointer;transition:transform .12s;font-family:inherit;
+  }
+  .btn:active{transform:scale(.96);}
+  .btn-primary{background:linear-gradient(135deg,var(--saffron),var(--saffron-deep));color:#fff;box-shadow:0 4px 14px rgba(232,93,4,.35);}
+  .btn-blue{background:linear-gradient(135deg,var(--blue),var(--blue-deep));color:#fff;}
+  .btn-ghost{background:var(--gold-soft);color:var(--saffron-deep);}
+  .btn-block{display:block;width:100%;text-align:center;}
+  .back{background:none;border:none;color:var(--blue-deep);font-weight:700;font-size:.95rem;cursor:pointer;margin-bottom:12px;font-family:inherit;}
+  /* Age picker */
+  .age-hero{text-align:center;padding:30px 10px 10px;}
+  .age-hero .big{font-size:3.4rem;}
+  .age-hero h1{color:var(--blue-deep);font-size:1.5rem;margin:8px 0 4px;}
+  .age-hero p{color:#8a7663;font-size:.92rem;margin-bottom:22px;}
+  .age-card{cursor:pointer;text-align:left;transition:border-color .15s,transform .12s;}
+  .age-card:hover{border-color:var(--saffron);}
+  .age-card:active{transform:scale(.97);}
+  .age-card .emoji{font-size:1.8rem;}
+  .age-card h3{margin-top:4px;}
+  .age-card p{font-size:.83rem;color:#8a7663;margin-top:3px;}
+  /* Shloka list */
+  .shloka-item{cursor:pointer;display:flex;align-items:center;gap:12px;transition:border-color .15s;}
+  .shloka-item:hover{border-color:var(--gold);}
+  .shloka-num{
+    width:44px;height:44px;border-radius:50%;background:var(--gold-soft);color:var(--saffron-deep);
+    font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.85rem;
+  }
+  .shloka-item .done{margin-left:auto;color:var(--green);font-size:1.2rem;}
+  /* Shloka detail */
+  .sanskrit{
+    background:linear-gradient(135deg,var(--gold-soft),#fff);border-radius:var(--radius);
+    padding:22px 18px;text-align:center;margin-bottom:14px;border:2px solid var(--gold);
+  }
+  .sanskrit .dev{font-size:1.25rem;line-height:2;color:var(--blue-deep);font-weight:600;}
+  .karaoke{font-size:1rem;line-height:2.1;color:var(--ink);margin-top:10px;}
+  .karaoke span{padding:2px 5px;border-radius:6px;transition:background .18s,color .18s;}
+  .karaoke span.hl{background:var(--saffron);color:#fff;font-weight:700;}
+  .karaoke span.sung{color:#b09a82;}
+  .controls{display:flex;gap:10px;justify-content:center;margin:10px 0 16px;flex-wrap:wrap;}
+  .speed{display:flex;align-items:center;gap:6px;font-size:.85rem;color:#8a7663;font-weight:600;}
+  .meaning-box{border-left:5px solid var(--blue);}
+  .meaning-box h4{color:var(--blue-deep);margin-bottom:6px;font-size:.95rem;}
+  .meaning-box p{font-size:.92rem;line-height:1.55;}
+  .word-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed #eadfd0;font-size:.9rem;}
+  .word-row:last-child{border-bottom:none;}
+  .word-row .w{font-weight:700;color:var(--saffron-deep);}
+  .word-row .m{color:#6b5b4a;text-align:right;}
+  .story-tag{display:inline-block;background:var(--blue-soft);color:var(--blue-deep);border-radius:999px;padding:4px 12px;font-size:.78rem;font-weight:700;margin-bottom:8px;}
+  /* Story */
+  .story-page{text-align:center;padding:10px 4px;}
+  .story-art{font-size:4rem;margin:14px 0;}
+  .story-page p{font-size:.97rem;line-height:1.65;text-align:left;}
+  .dots{display:flex;gap:7px;justify-content:center;margin:16px 0;}
+  .dot{width:9px;height:9px;border-radius:50%;background:#e0d3c2;}
+  .dot.on{background:var(--saffron);width:22px;border-radius:999px;transition:all .2s;}
+  .story-nav{display:flex;gap:10px;}
+  .story-nav .btn{flex:1;}
+  /* Dvaita */
+  .tattva-card{border-left:6px solid var(--saffron);}
+  .tattva-card.blue{border-left-color:var(--blue);}
+  .tattva-card.green{border-left-color:var(--green);}
+  .tattva-card h3{display:flex;align-items:center;gap:8px;font-size:1rem;}
+  .tattva-card p{font-size:.88rem;line-height:1.55;margin-top:6px;color:#5f5142;}
+  .analogy{background:var(--blue-soft);border-radius:14px;padding:14px;margin-top:10px;font-size:.87rem;line-height:1.5;}
+  .analogy b{color:var(--blue-deep);}
+  /* Quiz */
+  .q-progress{height:8px;background:#eee3d3;border-radius:999px;margin-bottom:18px;overflow:hidden;}
+  .q-progress div{height:100%;background:linear-gradient(90deg,var(--gold),var(--saffron));border-radius:999px;transition:width .3s;}
+  .q-text{font-size:1.05rem;font-weight:700;color:var(--blue-deep);margin-bottom:14px;line-height:1.45;}
+  .opt{
+    display:block;width:100%;text-align:left;background:#fff;border:2px solid #eadfd0;border-radius:14px;
+    padding:14px;margin-bottom:10px;font-size:.93rem;cursor:pointer;font-family:inherit;transition:all .15s;color:var(--ink);
+  }
+  .opt:hover{border-color:var(--gold);}
+  .opt.correct{border-color:var(--green);background:#eef9ee;font-weight:700;}
+  .opt.wrong{border-color:var(--red);background:#fdeeea;}
+  .feedback{font-size:.9rem;font-weight:700;margin:6px 0 12px;min-height:22px;}
+  .result-hero{text-align:center;padding:26px 10px;}
+  .result-hero .big{font-size:4rem;}
+  .result-hero h2{margin:10px 0 4px;}
+  .badge-row{display:flex;gap:10px;justify-content:center;margin:18px 0;flex-wrap:wrap;}
+  .badge{
+    background:var(--gold-soft);border:2px solid var(--gold);border-radius:16px;padding:10px 14px;
+    font-size:.82rem;font-weight:700;color:var(--saffron-deep);text-align:center;min-width:90px;
+  }
+  .badge .b-icon{font-size:1.6rem;display:block;margin-bottom:4px;}
+  .badge.locked{opacity:.35;filter:grayscale(1);}
+  .toast{
+    position:absolute;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+    background:var(--blue-deep);color:#fff;padding:12px 20px;border-radius:999px;font-size:.88rem;font-weight:700;
+    opacity:0;transition:all .35s;pointer-events:none;white-space:nowrap;z-index:50;box-shadow:0 6px 20px rgba(0,0,0,.3);
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .note{font-size:.78rem;color:#a5937e;text-align:center;margin-top:10px;font-style:italic;}
+  /* Krishna hero */
+  .krishna-hero{
+    background:linear-gradient(135deg,#1B4965 0%,#2E86AB 70%,#3d9bc4 100%);
+    border-radius:var(--radius);padding:20px 16px;text-align:center;color:#fff;
+    margin-bottom:14px;border:2px solid var(--gold);box-shadow:0 6px 20px rgba(27,73,101,.35);
+  }
+  .kh-title{font-weight:800;color:var(--gold);font-size:1.05rem;margin:6px 0 8px;letter-spacing:.3px;}
+  .kh-shloka{font-size:.98rem;line-height:1.9;font-weight:600;}
+  .kh-sub{font-size:.82rem;line-height:1.5;margin-top:8px;color:#d8ecf5;}
+  .guru-hero{text-align:center;padding:8px 0 4px;}
+  .guru-hero .g-art{font-size:3rem;}
+  .guru-sec h3{color:var(--blue-deep);font-size:1.02rem;margin-bottom:6px;}
+  .guru-sec p{font-size:.9rem;line-height:1.6;color:#5f5142;margin-bottom:8px;}
+  .fact{display:flex;gap:10px;align-items:flex-start;padding:7px 0;font-size:.88rem;line-height:1.5;color:#5f5142;}
+  .fact .f-ic{flex-shrink:0;}
+  .teaching{
+    background:var(--gold-soft);border-radius:12px;padding:11px 13px;margin-bottom:9px;
+    font-size:.88rem;line-height:1.5;border-left:4px solid var(--saffron);
+  }
+  .teaching b{color:var(--saffron-deep);}
+  /* Tier chip */
+  .tier-chip{
+    display:inline-block;background:var(--blue-soft);color:var(--blue-deep);border:1.5px solid #bcdcea;
+    border-radius:999px;padding:6px 14px;font-size:.8rem;font-weight:700;cursor:pointer;
+    margin:2px 0 10px;transition:transform .12s;
+  }
+  .tier-chip:active{transform:scale(.96);}
+  /* Chapter accordion */
+  .chap{border:1.5px solid #eadfd0;border-radius:14px;margin-bottom:9px;overflow:hidden;background:#fff;}
+  .chap summary{
+    list-style:none;cursor:pointer;padding:12px 14px;font-size:.9rem;font-weight:700;color:var(--blue-deep);
+    display:flex;align-items:center;gap:8px;
+  }
+  .chap summary::-webkit-details-marker{display:none;}
+  .chap summary::after{content:'▸';margin-left:auto;color:#c9b8a5;transition:transform .2s;}
+  .chap[open] summary::after{transform:rotate(90deg);}
+  .chap .chap-body{padding:0 14px 12px;font-size:.87rem;line-height:1.55;color:#5f5142;}
+  /* Gita library */
+  .lib-item{cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px;transition:border-color .15s;}
+  .lib-item:hover{border-color:var(--gold);}
+  .lib-item .ch-num{
+    width:40px;height:40px;border-radius:12px;background:var(--blue-soft);color:var(--blue-deep);
+    font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .lib-item h3{font-size:.95rem;color:var(--ink);}
+  .lib-item p{font-size:.78rem;color:#8a7663;margin-top:2px;}
+  .verse-grid{display:flex;flex-wrap:wrap;gap:8px;}
+  .verse-btn{
+    width:52px;height:44px;border-radius:12px;border:1.5px solid #eadfd0;background:#fff;color:var(--blue-deep);
+    font-weight:700;font-size:.9rem;cursor:pointer;font-family:inherit;transition:all .12s;
+  }
+  .verse-btn:hover{border-color:var(--gold);background:var(--gold-soft);}
+  .verse-nav{display:flex;gap:10px;margin-top:4px;}
+  .verse-nav .btn{flex:1;}
+  .translit-block{font-size:.92rem;line-height:1.8;color:#6b5b4a;margin-top:10px;font-style:italic;white-space:pre-line;}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="topbar">
+    <div class="title">🪈 Gita Kids</div>
+    <div class="stats">
+      <span class="pill">🔥 <span id="streak">1</span></span>
+      <span class="pill">⭐ <span id="points">0</span></span>
+    </div>
+  </div>
+
+  <!-- AGE PICKER -->
+  <div class="screen active" id="scr-age">
+    <div class="krishna-hero">
+      <div style="font-size:2.6rem">🦚🪈</div>
+      <div class="kh-title">Sri Krishna — Our Ultimate Guide &amp; Protector</div>
+      <div class="kh-shloka">वसुदेवसुतं देवं कंसचाणूरमर्दनम् ।<br>देवकीपरमानन्दं कृष्णं वन्दे जगद्गुरुम् ॥</div>
+      <div style="font-weight:800;color:var(--gold);font-size:.92rem;margin-top:8px;letter-spacing:.4px">हरि सर्वोत्तम · वायु जीवोत्तम<br>Hari Sarvottama · Vayu Jeevottama</div>
+      <div class="kh-sub">Sri Krishna is the Supreme Lord, the teacher of the whole world, and the loving protector of all who take refuge in Him — and Vayu is the greatest of souls, our guide to Him.</div>
+    </div>
+    <div class="age-hero" style="padding-top:14px">
+      <h1>Namaste! Welcome!</h1>
+      <p>Learn the Bhagavad Gita and the wisdom of Sri Madhwacharya. Who is learning today?</p>
+    </div>
+    <div class="card age-card" onclick="setTier('sprout')">
+      <span class="emoji">🌱</span><h3>Little Sprout (5–8)</h3>
+      <p>Pictures, stories and simple meanings. Listen and repeat!</p>
+    </div>
+    <div class="card age-card" onclick="setTier('explorer')">
+      <span class="emoji">🚀</span><h3>Explorer (8–12)</h3>
+      <p>Read shlokas, take quizzes, earn badges and keep your streak!</p>
+    </div>
+    <div class="card age-card" onclick="setTier('seeker')">
+      <span class="emoji">🔭</span><h3>Seeker (12+)</h3>
+      <p>Word-by-word Sanskrit and the deeper ideas of Tattvavada.</p>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div class="screen" id="scr-home">
+    <div class="krishna-hero" style="padding:14px 16px">
+      <div style="font-size:1.9rem">🦚🪈</div>
+      <div class="kh-title" style="margin:4px 0 4px">Sri Krishna — Our Ultimate Guide &amp; Protector</div>
+      <div style="font-weight:800;color:var(--gold);font-size:.85rem;letter-spacing:.4px">Hari Sarvottama · Vayu Jeevottama</div>
+      <div class="kh-sub" style="margin-top:2px">कृष्णं वन्दे जगद्गुरुम् — I bow to Krishna, teacher of the world</div>
+    </div>
+    <h2 id="home-greet">Hello, Explorer!</h2>
+    <div class="tier-chip" id="tier-chip" onclick="go('scr-age')">🚀 Explorer · shlokas, stories, quizzes &amp; badges — tap to change</div>
+    <p class="subtitle">What shall we learn today?</p>
+    <div class="card menu-card" onclick="go('scr-shlokas')">
+      <div class="menu-icon" style="background:var(--gold-soft)">📖</div>
+      <div><h3>Learn Shlokas</h3><p>5 gems from the Gita, with karaoke chanting</p></div>
+      <span class="arrow">›</span>
+    </div>
+    <div class="card menu-card" onclick="openLibrary()">
+      <div class="menu-icon" style="background:#e8f0ff">📚</div>
+      <div><h3>Full Gita Library</h3><p>All 18 chapters · 700 shlokas with meanings</p></div>
+      <span class="arrow">›</span>
+    </div>
+    <div class="card menu-card" onclick="go('scr-mtn')">
+      <div class="menu-icon" style="background:#fff0e0">📜</div>
+      <div><h3>Mahabharata Secrets</h3><p>The Acharya's Mahabharata Tatparya Nirnaya, for kids</p></div>
+      <span class="arrow">›</span>
+    </div>
+    <div class="card menu-card" onclick="go('scr-story');showStoryPage(0)">
+      <div class="menu-icon" style="background:var(--blue-soft)">🏔️</div>
+      <div><h3>Acharya Stories</h3><p>The boy who turned seeds into gold</p></div>
+      <span class="arrow">›</span>
+    </div>
+    <div class="card menu-card" onclick="go('scr-dvaita')">
+      <div class="menu-icon" style="background:#eef9ee">🎨</div>
+      <div><h3>Dvaita for Kids</h3><p>The Three Realities, made simple</p></div>
+      <span class="arrow">›</span>
+    </div>
+    <div class="card menu-card" onclick="go('scr-gurus')">
+      <div class="menu-icon" style="background:#f3e9ff">🙏</div>
+      <div><h3>Our Great Gurus</h3><p>Sri Madhwacharya &amp; Sri Raghavendra Swamy</p></div>
+      <span class="arrow">›</span>
+    </div>
+    <div class="card menu-card" onclick="startQuiz()">
+      <div class="menu-icon" style="background:#fdeeea">🎯</div>
+      <div><h3>Quiz Time</h3><p>Test yourself, win badges!</p></div>
+      <span class="arrow">›</span>
+    </div>
+    <div class="card">
+      <h3 style="font-size:.95rem;color:var(--blue-deep);margin-bottom:8px">🏅 My Badges</h3>
+      <div class="badge-row" style="margin:6px 0 0">
+        <div class="badge locked" id="bdg-shloka"><span class="b-icon">🎵</span>Shloka Star</div>
+        <div class="badge locked" id="bdg-story"><span class="b-icon">📚</span>Story Seeker</div>
+        <div class="badge locked" id="bdg-quiz"><span class="b-icon">🏆</span>Quiz Champ</div>
+      </div>
+    </div>
+    <p class="note">Prototype — progress resets when you close the page.</p>
+  </div>
+
+  <!-- SHLOKA LIST -->
+  <div class="screen" id="scr-shlokas">
+    <button class="back" onclick="go('scr-home')">‹ Home</button>
+    <h2>Five Gems of the Gita 💎</h2>
+    <p class="subtitle">Tap a shloka to chant and learn its meaning</p>
+    <div id="shloka-list"></div>
+  </div>
+
+  <!-- SHLOKA DETAIL -->
+  <div class="screen" id="scr-shloka-detail">
+    <button class="back" onclick="stopKaraoke();go('scr-shlokas')">‹ All Shlokas</button>
+    <div id="shloka-detail"></div>
+  </div>
+
+  <!-- STORY -->
+  <div class="screen" id="scr-story">
+    <button class="back" onclick="go('scr-home')">‹ Home</button>
+    <span class="story-tag">Story of Sri Madhwacharya</span>
+    <div class="card story-page" id="story-card"></div>
+    <div class="dots" id="story-dots"></div>
+    <div class="story-nav">
+      <button class="btn btn-ghost" id="story-prev" onclick="storyNav(-1)">‹ Back</button>
+      <button class="btn btn-primary" id="story-next" onclick="storyNav(1)">Next ›</button>
+    </div>
+  </div>
+
+  <!-- DVAITA -->
+  <div class="screen" id="scr-dvaita">
+    <button class="back" onclick="go('scr-home')">‹ Home</button>
+    <h2>The Three Realities 🌟</h2>
+    <p class="subtitle">Sri Madhwacharya taught that these three are real — and different from each other, forever.</p>
+    <div class="card tattva-card">
+      <h3>🌞 Hari — The Supreme God</h3>
+      <p>Lord Vishnu (Hari) is the greatest of all — <b>Hari Sarvottama</b>! He is independent, all-powerful, and full of every good quality. Everything depends on Him.</p>
+    </div>
+    <div class="card tattva-card blue">
+      <h3>💨 Vayu — Mukhya Prana, Our Guide</h3>
+      <p><b>Vayu Jeevottama</b> — Vayu is the best among all souls, and God's chosen helper. He came as Hanuman, as Bhima, and as Sri Madhwacharya to guide us to God.</p>
+      <p style="margin-top:6px">Vayu is called <b>Mukhya Prana</b> — the "chief life-breath." He lives inside every being, keeping us alive with every breath, and always keeps Sri Hari in his heart. God's grace reaches us through Mukhya Prana — so we honour him as our greatest guru and protector.</p>
+    </div>
+    <div class="card tattva-card green">
+      <h3>🌍 Jagat — The Real World</h3>
+      <p>The world is <b>real</b>, not a dream! You, your family, the trees and stars — all truly exist. God made it all, and each soul is unique and different from God.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--blue-deep);font-size:1rem">🤔 How can they be different but connected?</h3>
+      <div class="analogy">👑 <b>The King and his Minister:</b> The minister works closely with the king every day — but he never <i>becomes</i> the king. We are close to God, loved by God, but always distinct from God.</div>
+      <div class="analogy">🖼️ <b>The Artist and the Painting:</b> A painting shows the artist's genius, but the painting is not the artist. The world shows God's greatness — yet God is beyond it.</div>
+    </div>
+    <button class="btn btn-blue btn-block" onclick="award('dvaita');go('scr-home')">Got it! ⭐ +10</button>
+  </div>
+
+  <!-- MAHABHARATA TATPARYA NIRNAYA -->
+  <div class="screen" id="scr-mtn">
+    <button class="back" onclick="go('scr-home')">‹ Home</button>
+    <h2>Mahabharata Secrets 📜</h2>
+    <p class="subtitle">Sri Madhwacharya's <b>Mahabharata Tatparya Nirnaya</b> — "finding the true meaning of the Mahabharata" — made simple for you!</p>
+
+    <div class="card guru-sec">
+      <h3>🔍 Why did the Acharya write this book?</h3>
+      <p>The Mahabharata is a giant treasure chest of wisdom. But over thousands of years, copies got mixed up and people started misunderstanding the stories. So Sri Madhwacharya wrote a special guidebook — <b>32 chapters of beautiful verses</b> — to show everyone what the great epic <b>really</b> teaches. It even retells the story of Sri Rama and Sri Krishna!</p>
+      <div class="analogy">🗺️ <b>Think of it like this:</b> if the Mahabharata is a huge treasure map, the Tatparya Nirnaya is the magnifying glass that shows the correct path to the treasure — and the treasure is knowing Sri Hari!</div>
+    </div>
+
+    <div class="card tattva-card">
+      <h3>🦚 Secret 1 — It's really all about Sri Krishna</h3>
+      <p>The Mahabharata is not just a story about a war between cousins. Its real message is that <b>Sri Krishna (Hari) is the Supreme Lord</b> who plans and protects everything. Every hero wins only with His grace. The whole epic is one big arrow pointing to God!</p>
+    </div>
+
+    <div class="card tattva-card blue">
+      <h3>💪 Secret 2 — Bhima, the perfect devotee</h3>
+      <p>The Acharya shows that <b>Bhima</b> — the avatar of Vayu, Mukhya Prana — is the epic's ideal hero. Why? His devotion to Krishna <b>never wavered even once</b>. He was super strong, but his greatest strength was doing exactly what Krishna wished, without fear or doubt.</p>
+    </div>
+
+    <div class="card tattva-card green">
+      <h3>⚖️ Secret 3 — Always stand on dharma's side</h3>
+      <p>The Pandavas suffered many troubles but never left dharma — and with Krishna beside them, dharma won. The lesson for us: <b>choose what is right, even when it is hard</b>, and trust that God protects those who do.</p>
+    </div>
+
+    <div class="card tattva-card">
+      <h3>🌈 Secret 4 — Every soul is unique</h3>
+      <p>Each character — Yudhishthira, Draupadi, Arjuna, even Duryodhana — shows that souls are all different, with different natures (this is called <b>taratamya</b>, gradation). Like students in one classroom, no two souls are the same — and Sri Hari is the teacher above all.</p>
+    </div>
+
+    <div class="card guru-sec">
+      <h3>📚 Want to read the whole book?</h3>
+      <p>All <b>32 chapters</b> in six easy parts — tap each part to see what it covers.</p>
+      <details class="chap"><summary>🔑 Part 1 · Ch 1–2 — The Key to All Scriptures</summary>
+        <div class="chap-body">The Acharya opens by explaining how to correctly understand ALL scriptures: every Veda, every Purana, and the whole Mahabharata point to one truth — <b>Sri Hari is Supreme</b>. He promises to tell the epic's true, original story.</div></details>
+      <details class="chap"><summary>🌌 Part 2 · Ch 3 — How the World Begins</summary>
+        <div class="chap-body">The creation of the universe, and how the devas and rishis take birth on Earth to help the Lord's great plan — setting the stage for both the Ramayana and the Mahabharata.</div></details>
+      <details class="chap"><summary>🏹 Part 3 · Ch 4–9 — The Story of Sri Rama</summary>
+        <div class="chap-body">A beautiful re-telling of the Ramayana: Sri Rama's avatara, Hanuman's perfect service (Vayu's first avatar!), the defeat of Ravana, and Rama's rule of dharma. It shows how God always protects the good.</div></details>
+      <details class="chap"><summary>👶 Part 4 · Ch 10–21 — Krishna Comes, Pandavas Grow</summary>
+        <div class="chap-body">Sri Vyasa and Sri Krishna appear on Earth; the Pandavas are born. Krishna's childhood miracles, the defeat of Kamsa, the Pandavas' escape from the house of lac, and Draupadi's wedding.</div></details>
+      <details class="chap"><summary>🌲 Part 5 · Ch 22–28 — The Dice Game and Exile</summary>
+        <div class="chap-body">The cheating dice game, the Pandavas' 13 years of exile, Bhima's mighty deeds protecting his family, and Krishna's peace mission to the Kauravas — refused by proud Duryodhana.</div></details>
+      <details class="chap"><summary>🏆 Part 6 · Ch 29–32 — Dharma Wins</summary>
+        <div class="chap-body">The great Kurukshetra war, Krishna teaching the Bhagavad Gita, the victory of the Pandavas, and the epic's final message: <b>Hari is Supreme, and Bhima shows us perfect devotion</b>. Dharma always wins in the end!</div></details>
+      <p class="note">Grouping simplified for young readers — study the full text chapter-by-chapter with your guru or elders. The full app will include audio summaries of each chapter.</p>
+    </div>
+
+    <div class="card guru-sec">
+      <h3>📖 How the book begins</h3>
+      <div class="kh-shloka" style="background:var(--gold-soft);color:var(--saffron-deep);border-radius:12px;padding:12px;font-size:.9rem">नारायणाय परिपूर्णगुणार्णवाय ...</div>
+      <p class="note">The very first words bow to Narayana, "the complete, infinite ocean of good qualities" — telling us from verse one who the true hero is.</p>
+    </div>
+    <button class="btn btn-blue btn-block" onclick="award('mtn');go('scr-home')">I found the secrets! ⭐ +15</button>
+  </div>
+
+  <!-- GURUS -->
+  <div class="screen" id="scr-gurus">
+    <button class="back" onclick="go('scr-home')">‹ Home</button>
+    <div class="krishna-hero">
+      <div style="font-size:2.2rem">🦚🪈</div>
+      <div class="kh-title">Sri Krishna — The Supreme Lord</div>
+      <div class="kh-sub">Everything begins with Sri Hari. Our gurus lived only to show us His greatness and lead us safely to His lotus feet.</div>
+    </div>
+
+    <div class="card guru-sec">
+      <div class="guru-hero"><div class="g-art">🕉️🏔️</div></div>
+      <h3>Sri Madhwacharya (1238–1317 CE)</h3>
+      <span class="story-tag">The Greatness of the Acharya</span>
+      <p>Born as <b>Vasudeva</b> in Pajaka village near Udupi, he is revered as the <b>third avatara of Vayu, the Mukhya Prana</b> (the chief life-force who sustains every living being and is the foremost servant of Sri Hari) — after Hanuman, who served Sri Rama, and Bhima, who served Sri Krishna. As a boy he showed astonishing strength, a perfect memory, and complete mastery of the scriptures.</p>
+      <div class="fact"><span class="f-ic">🧒</span><span>Took sannyasa as a young boy and received the name <b>Purnaprajna</b> — "one of complete wisdom" — and later <b>Anandatirtha</b>.</span></div>
+      <div class="fact"><span class="f-ic">📚</span><span>Composed <b>37 great works</b> (the Sarvamoola Granthas), including the Gita Bhashya, Gita Tatparya Nirnaya, and commentaries on the Brahma Sutras and Upanishads.</span></div>
+      <div class="fact"><span class="f-ic">🛕</span><span>Installed the enchanting deity of <b>Bala Krishna at Udupi</b> — recovered from a ship he saved from a storm — and founded the <b>Ashta Mathas</b> that worship Him to this day.</span></div>
+      <div class="fact"><span class="f-ic">⚖️</span><span>Established <b>Tattvavada (Dvaita Vedanta)</b>: Sri Hari is supreme and independent; each soul and the world are real and eternally distinct from Him. <b>Hari Sarvottama, Vayu Jeevottama!</b></span></div>
+      <div class="fact"><span class="f-ic">💪</span><span>Travelled across India twice, won every debate with gentle, unbeatable logic, performed many miracles — and taught that <b>loving devotion (bhakti) rooted in correct knowledge</b> is the way to moksha.</span></div>
+      <div class="fact"><span class="f-ic">🌸</span><span>In 1317 CE, while teaching the Aitareya Upanishad in Udupi, he disappeared from sight under a <b>shower of flowers</b> — tradition says he continues serving Sri Hari in Badari.</span></div>
+    </div>
+
+    <div class="card guru-sec">
+      <div class="guru-hero"><div class="g-art">📿🎻</div></div>
+      <h3>Sri Raghavendra Swamy (1595–1671 CE)</h3>
+      <span class="story-tag">Kalpavriksha of Kali Yuga</span>
+      <p>Born as <b>Venkatanatha</b>, he was a brilliant scholar and a gifted veena player who gave up everything for Sri Hari. As the pontiff <b>Sri Raghavendra Tirtha</b>, he became one of the greatest saints in Sri Madhwacharya's lineage, writing nearly 50 works that make the Acharya's teachings clear for everyone.</p>
+      <p>In 1671 he entered <b>Brindavana alive at Mantralayam</b> (on the banks of the Tungabhadra), promising to bless devotees from there for centuries. Millions still visit him and lovingly call him <b>"Rayaru."</b></p>
+      <h3 style="font-size:.95rem;margin-top:10px">✨ His timeless teachings</h3>
+      <div class="teaching"><b>Right living and right thinking:</b> in his famous final sermon, Rayaru taught that dharma without honest conduct is empty — live truthfully every single day.</div>
+      <div class="teaching"><b>Serve others:</b> social service done in the name of God is true worship. Kindness to every being pleases Sri Hari.</div>
+      <div class="teaching"><b>Devotion with knowledge:</b> study the shastras, remember Hari Sarvottama, and surrender to Sri Krishna — He never abandons His devotees.</div>
+      <div class="teaching"><b>Never lose hope:</b> Rayaru is called the Kalpavriksha (wish-fulfilling tree) and Kamadhenu of Kali Yuga — sincere prayer is always answered.</div>
+      <div class="kh-shloka" style="background:var(--blue-soft);color:var(--blue-deep);border-radius:12px;padding:12px;font-size:.9rem;margin-top:8px">पूज्याय राघवेन्द्राय सत्यधर्मरताय च ।<br>भजतां कल्पवृक्षाय नमतां कामधेनवे ॥</div>
+      <p class="note">"Salutations to revered Raghavendra, devoted to truth and dharma — a wish-fulfilling tree to those who worship, a Kamadhenu to those who bow."</p>
+    </div>
+    <button class="btn btn-blue btn-block" onclick="award('gurus');go('scr-home')">I learned about our Gurus! ⭐ +15</button>
+  </div>
+
+  <!-- GITA LIBRARY: CHAPTERS -->
+  <div class="screen" id="scr-library">
+    <button class="back" onclick="go('scr-home')">‹ Home</button>
+    <h2>Full Gita Library 📚</h2>
+    <p class="subtitle">All 18 chapters, 700 shlokas — tap a chapter</p>
+    <div id="lib-chapters"></div>
+    <p class="note">Sanskrit text &amp; transliteration from the open Gita corpus · English translation: Swami Sivananda. Madhwa-tradition (Gita Bhashya) meanings will be added with scholar review.</p>
+  </div>
+
+  <!-- GITA LIBRARY: VERSE LIST -->
+  <div class="screen" id="scr-chapter">
+    <button class="back" onclick="go('scr-library')">‹ All Chapters</button>
+    <div id="chapter-head"></div>
+    <div class="verse-grid" id="verse-grid"></div>
+  </div>
+
+  <!-- GITA LIBRARY: VERSE -->
+  <div class="screen" id="scr-verse">
+    <button class="back" id="verse-back" onclick="go('scr-chapter')">‹ Chapter</button>
+    <div id="verse-body"></div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="scr-quiz">
+    <button class="back" onclick="go('scr-home')">‹ Home</button>
+    <h2>Quiz Time 🎯</h2>
+    <div class="q-progress"><div id="q-bar" style="width:0%"></div></div>
+    <div id="quiz-body"></div>
+  </div>
+
+  <!-- QUIZ RESULT -->
+  <div class="screen" id="scr-result">
+    <div class="result-hero" id="result-body"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="verses.js"></script>
+<script>
+/* ---------- state (in-memory) ---------- */
+var state={tier:'explorer',points:0,streak:1,shlokasDone:{},storyDone:false,quizBest:0,dvaitaDone:false};
+var tierNames={sprout:'Little Sprout',explorer:'Explorer',seeker:'Seeker'};
+
+/* ---------- content ---------- */
+var shlokas=[
+ {ref:'2.47',title:'Do Your Duty',
+  dev:'कर्मण्येवाधिकारस्ते मा फलेषु कदाचन ।<br>मा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि ॥',
+  words:['kar-ma-ṇy-e-vā','dhi-kā-ras-te','mā','pha-le-ṣu','ka-dā-ca-na','mā','kar-ma-pha-la','he-tur-bhūr','mā','te','saṅ-go','stva-kar-ma-ṇi'],
+  simple:'Krishna says: do your work with all your heart, like offering a flower to God. Don\'t keep worrying "what prize will I get?" Just do your best — God takes care of the rest!',
+  deeper:'You have the right only to your action, never to its fruits. Sri Madhwacharya teaches that all our actions should be offered to Sri Hari, the true giver of all results — acting without selfish attachment, but never without devotion.',
+  wbw:[['karmaṇi eva adhikāraḥ te','your right is to action alone'],['mā phaleṣu kadācana','never to the fruits'],['mā karma-phala-hetuḥ bhūḥ','don\'t act just for rewards'],['mā te saṅgaḥ astu akarmaṇi','and don\'t stop doing your duty']],
+  context:'Arjuna was scared and confused on the battlefield. Krishna reminds him: a warrior\'s duty is to act — leave the results to God.'},
+ {ref:'4.7',title:'When God Comes Down',
+  dev:'यदा यदा हि धर्मस्य ग्लानिर्भवति भारत ।<br>अभ्युत्थानमधर्मस्य तदात्मानं सृजाम्यहम् ॥',
+  words:['ya-dā','ya-dā','hi','dhar-mas-ya','glā-nir','bha-va-ti','bhā-ra-ta','abh-yut-thā-nam','a-dhar-mas-ya','ta-dāt-mā-naṁ','sṛ-jām-ya-ham'],
+  simple:'Whenever goodness becomes weak and bad things grow strong in the world, God Himself comes down to help — again and again!',
+  deeper:'Whenever dharma declines and adharma rises, the Lord manifests Himself. In Tattvavada, the Lord\'s avataras are fully divine — every form of Hari is complete and perfect, never touched by any weakness.',
+  wbw:[['yadā yadā hi','whenever indeed'],['dharmasya glāniḥ bhavati','goodness declines'],['abhyutthānam adharmasya','and wrongness rises'],['tadā ātmānaṁ sṛjāmi aham','then I manifest Myself']],
+  context:'Krishna reveals a secret to Arjuna: this is not His first visit! He appears in every age to protect goodness.'},
+ {ref:'4.8',title:'Age After Age',
+  dev:'परित्राणाय साधूनां विनाशाय च दुष्कृताम् ।<br>धर्मसंस्थापनार्थाय सम्भवामि युगे युगे ॥',
+  words:['pa-ri-trā-ṇā-ya','sā-dhū-nāṁ','vi-nā-śā-ya','ca','duṣ-kṛ-tām','dhar-ma-saṁs-thā-pa','nār-thā-ya','sam-bha-vā-mi','yu-ge','yu-ge'],
+  simple:'God comes to protect good people, stop the wicked, and set goodness firmly back on its feet — in every age!',
+  deeper:'To deliver the virtuous, subdue the wicked, and re-establish dharma, the Lord appears yuga after yuga — as Rama, as Krishna, and in other divine forms, each one complete and supreme.',
+  wbw:[['paritrāṇāya sādhūnām','to protect the good'],['vināśāya ca duṣkṛtām','to defeat the wicked'],['dharma-saṁsthāpana-arthāya','to firmly establish dharma'],['sambhavāmi yuge yuge','I appear age after age']],
+  context:'Think of Rama defeating Ravana, or Krishna lifting Govardhana — God always comes when the world needs Him.'},
+ {ref:'9.22',title:'God Carries What You Need',
+  dev:'अनन्याश्चिन्तयन्तो मां ये जनाः पर्युपासते ।<br>तेषां नित्याभियुक्तानां योगक्षेमं वहाम्यहम् ॥',
+  words:['a-nan-yāś','cin-ta-yan-to','māṁ','ye','ja-nāḥ','par-yu-pā-sa-te','te-ṣāṁ','nit-yā-bhi-yuk-tā-nāṁ','yo-ga-kṣe-maṁ','va-hām-ya-ham'],
+  simple:'Krishna promises: "If you think of Me with love and trust Me, I will personally carry everything you need — like a parent caring for their child."',
+  deeper:'For those who worship the Lord with single-minded devotion, He Himself carries their yoga (what they lack) and kshema (what they have). Devotion (bhakti), rooted in right knowledge of Hari\'s supremacy, is the path Madhwacharya emphasizes most.',
+  wbw:[['ananyāḥ cintayantaḥ mām','thinking of Me alone'],['ye janāḥ paryupāsate','those who worship Me'],['teṣāṁ nitya-abhiyuktānām','for those always devoted'],['yoga-kṣemaṁ vahāmi aham','I carry all they need']],
+  context:'This is one of the sweetest promises in the whole Gita — God personally looks after His devotees.'},
+ {ref:'18.66',title:'Take Refuge in God',
+  dev:'सर्वधर्मान्परित्यज्य मामेकं शरणं व्रज ।<br>अहं त्वां सर्वपापेभ्यो मोक्षयिष्यामि मा शुचः ॥',
+  words:['sar-va-dhar-mān','pa-rit-ya-jya','mām','e-kaṁ','śa-ra-ṇaṁ','vra-ja','a-haṁ','tvāṁ','sar-va-pā-pe-bhyo','mok-ṣa-yiṣ-yā-mi','mā','śu-caḥ'],
+  simple:'Krishna\'s final teaching: "Come to Me for shelter with full trust. I will free you from everything wrong. Do not be afraid, do not be sad!"',
+  deeper:'The charama shloka. In Sri Madhwacharya\'s Gita Bhashya, this means: perform all duties as worship of the Supreme Hari alone, take refuge in Him as the one independent Lord — and He will grant liberation. Grieve not!',
+  wbw:[['sarva-dharmān parityajya','offering all duties to Me'],['mām ekaṁ śaraṇaṁ vraja','take refuge in Me alone'],['ahaṁ tvāṁ sarva-pāpebhyaḥ','I will free you from all wrongs'],['mokṣayiṣyāmi mā śucaḥ','I will liberate you — do not grieve']],
+  context:'After 700 verses, this is Krishna\'s loving conclusion to Arjuna — and to all of us.'}
+];
+
+var storyPages=[
+ {art:'👶🌴',text:'Long ago, near Udupi, a special boy named Vasudeva was born in the village of Pajaka. Even as a baby, he was amazingly strong and wise — people said he was the avatar of Vayu, who had come before as mighty Hanuman and brave Bhima!'},
+ {art:'🌰➡️🪙',text:'One day, a moneylender came asking Vasudeva\'s father to repay a debt. Little Vasudeva calmly took a handful of tamarind seeds, and — to everyone\'s astonishment — placed them in the man\'s hand as gold coins! The debt was paid.'},
+ {art:'🧗‍♂️📿',text:'Vasudeva loved God more than anything. As a young boy he chose the path of sannyasa and received the name Purnaprajna — "one of complete wisdom." Later, he became famous as Madhwacharya.'},
+ {art:'📖✍️',text:'Madhwacharya studied every scripture and taught a shining truth: God (Hari) is supreme, each soul is real and unique, and the world is real too. God and souls are different forever — like the sun and the sunbeams. This teaching is called Dvaita, or Tattvavada.'},
+ {art:'🛕🛕🛕',text:'In Udupi, he installed the beautiful deity of little Krishna, which he found in a lump of clay from a sinking ship he had saved. He established eight mathas — the Ashta Mathas — whose swamijis still worship Sri Krishna in Udupi today!'},
+ {art:'🌟🙏',text:'Madhwacharya wrote 37 great works, defeated many scholars in debate with kindness and logic, and showed everyone the path of loving devotion to Sri Hari. His teachings live on in millions of hearts — including yours!'}
+];
+
+var quiz=[
+ {q:'In shloka 2.47, what does Krishna teach Arjuna?',opts:['Do your duty well and don\'t worry about rewards','Never do any work at all','Only work when you get a prize','Run away from problems'],a:0,why:'Right! Act with all your heart, and leave the results to God.'},
+ {q:'Young Vasudeva (Madhwacharya) paid his father\'s debt by turning tamarind seeds into…',opts:['Mangoes','Gold coins','Silver cups','Diamonds'],a:1,why:'Yes! The tamarind seeds became gold coins in the moneylender\'s hand.'},
+ {q:'According to tradition, Sri Madhwacharya is the third avatar of…',opts:['Garuda','Indra','Vayu (after Hanuman and Bhima)','Agni'],a:2,why:'Correct! Hanuman, Bhima, then Madhwacharya — three avatars of Vayu.'},
+ {q:'How many mathas did Madhwacharya establish in Udupi?',opts:['Three','Five','Ten','Eight (Ashta Mathas)'],a:3,why:'Yes — the famous Ashta Mathas of Udupi!'},
+ {q:'What does Dvaita teach about God and souls?',opts:['They are exactly the same','God and souls are eternally different, and God is supreme','Souls become God after some time','Only God is real, nothing else exists'],a:1,why:'Perfect! Hari Sarvottama — God is supreme, and each soul is real and forever distinct.'},
+ {q:'In shloka 9.22, what does Krishna promise His devotees?',opts:['He will personally carry everything they need','They will win every game','They will never have to study','They will become kings'],a:0,why:'Yes! Like a loving parent, God takes care of His devotees\' needs.'},
+ {q:'Where does Sri Raghavendra Swamy bless devotees from his Brindavana?',opts:['Udupi','Mantralayam','Pajaka','Badari'],a:1,why:'Yes! Rayaru entered Brindavana alive at Mantralayam in 1671, promising to bless devotees for centuries.'},
+ {q:'What did Rayaru teach in his famous final sermon?',opts:['Collect lots of wealth','Right living and right thinking','Never help others','Stop studying scriptures'],a:1,why:'Correct! Right living, right thinking, service to others, and devotion to Sri Hari.'},
+ {q:'What is the Mahabharata Tatparya Nirnaya?',opts:['A cookbook','Madhwacharya\'s book revealing the true meaning of the Mahabharata','A book of riddles','A map of Udupi'],a:1,why:'Yes! In 32 chapters, the Acharya shows the epic\'s real message — the supremacy of Sri Hari.'},
+ {q:'In the Tatparya Nirnaya, who is shown as the perfect devotee whose faith in Krishna never wavered?',opts:['Duryodhana','Shakuni','Bhima','Karna'],a:2,why:'Right! Bhima — the avatar of Vayu, Mukhya Prana — never doubted Krishna even once.'}
+];
+
+/* ---------- helpers ---------- */
+function $(id){return document.getElementById(id);}
+function go(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  $(id).classList.add('active');
+  $(id).scrollTop=0;
+}
+function toast(msg){
+  var t=$('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._tm);t._tm=setTimeout(function(){t.classList.remove('show');},2200);
+}
+function addPoints(n){state.points+=n;$('points').textContent=state.points;}
+var tierGist={
+  sprout:'🌱 Little Sprout · pictures, chant-along audio & simple meanings',
+  explorer:'🚀 Explorer · shlokas, stories, quizzes & badges',
+  seeker:'🔭 Seeker · word-by-word Sanskrit & Madhwa-tradition meanings'
+};
+function setTier(t){
+  state.tier=t;
+  $('home-greet').textContent='Hello, '+tierNames[t]+'!';
+  $('tier-chip').textContent=tierGist[t]+' — tap to change';
+  renderShlokaList();
+  go('scr-home');
+  toast('Welcome, '+tierNames[t]+'! 🙏');
+}
+function award(what){
+  if(what==='dvaita'&&!state.dvaitaDone){state.dvaitaDone=true;addPoints(10);toast('⭐ +10 points!');}
+  if(what==='gurus'&&!state.gurusDone){state.gurusDone=true;addPoints(15);toast('⭐ +15 points! Gurubhyo namah 🙏');}
+  if(what==='mtn'&&!state.mtnDone){state.mtnDone=true;addPoints(15);toast('⭐ +15 points! Secrets unlocked 📜');}
+}
+function checkBadges(){
+  if(Object.keys(state.shlokasDone).length>=shlokas.length){$('bdg-shloka').classList.remove('locked');}
+  if(state.storyDone){$('bdg-story').classList.remove('locked');}
+  if(state.quizBest>=5){$('bdg-quiz').classList.remove('locked');}
+}
+
+/* ---------- shlokas ---------- */
+function renderShlokaList(){
+  var html='';
+  shlokas.forEach(function(s,i){
+    html+='<div class="card shloka-item" onclick="openShloka('+i+')">'
+      +'<div class="shloka-num">'+s.ref+'</div>'
+      +'<div><h3 style="font-size:.98rem">'+s.title+'</h3>'
+      +'<p style="font-size:.8rem;color:#8a7663">Bhagavad Gita '+s.ref+'</p></div>'
+      +(state.shlokasDone[i]?'<span class="done">✔</span>':'<span class="arrow">›</span>')
+      +'</div>';
+  });
+  $('shloka-list').innerHTML=html;
+}
+var kTimer=null,kIdx=0,curShloka=0;
+function openShloka(i){
+  curShloka=i;stopKaraoke();
+  var s=shlokas[i];
+  var wordsHtml=s.words.map(function(w,j){return '<span id="kw'+j+'">'+w+'</span>';}).join(' ');
+  var h='<h2>'+s.title+' <span style="font-size:.8rem;color:#b09a82">• BG '+s.ref+'</span></h2>'
+    +'<div class="sanskrit"><div class="dev">'+s.dev+'</div>'
+    +'<div class="karaoke" id="karaoke">'+wordsHtml+'</div></div>'
+    +'<div class="controls">'
+    +'<button class="btn btn-primary" id="playBtn" onclick="toggleKaraoke()">▶ Chant Along</button>'
+    +'<div class="speed">🐢<input type="range" id="kspeed" min="300" max="900" value="550" step="50">🐇</div>'
+    +'</div>';
+  if(state.tier==='sprout'){
+    h+='<div class="card meaning-box"><h4>💛 What it means</h4><p>'+s.simple+'</p></div>';
+  }else{
+    h+='<div class="card meaning-box"><h4>💛 Simple meaning</h4><p>'+s.simple+'</p></div>';
+    h+='<div class="card meaning-box" style="border-left-color:var(--saffron)"><h4>📜 Story behind it</h4><p>'+s.context+'</p></div>';
+  }
+  if(state.tier==='seeker'){
+    h+='<div class="card"><h4 style="color:var(--blue-deep);margin-bottom:8px;font-size:.95rem">🔍 Word by word</h4>'
+      +s.wbw.map(function(r){return '<div class="word-row"><span class="w">'+r[0]+'</span><span class="m">'+r[1]+'</span></div>';}).join('')
+      +'</div>'
+      +'<div class="card meaning-box" style="border-left-color:var(--green)"><h4>🕉️ In Madhwa tradition</h4><p>'+s.deeper+'</p></div>';
+  }
+  h+='<button class="btn btn-blue btn-block" onclick="markShlokaDone()">I learned this shloka! ⭐ +20</button>'
+    +'<p class="note">Full app: real audio recordings by traditional scholars.</p>';
+  $('shloka-detail').innerHTML=h;
+  go('scr-shloka-detail');
+}
+function toggleKaraoke(){
+  if(kTimer){stopKaraoke();return;}
+  kIdx=0;$('playBtn').textContent='⏸ Pause';
+  var words=shlokas[curShloka].words;
+  function step(){
+    words.forEach(function(_,j){
+      var el=$('kw'+j);if(!el)return;
+      el.className=j<kIdx?'sung':(j===kIdx?'hl':'');
+    });
+    if(kIdx>=words.length){stopKaraoke();toast('🎵 Beautiful chanting!');return;}
+    kIdx++;
+    kTimer=setTimeout(step,1200-parseInt($('kspeed').value,10));
+  }
+  step();
+}
+function stopKaraoke(){
+  if(kTimer){clearTimeout(kTimer);kTimer=null;}
+  var pb=$('playBtn');if(pb)pb.textContent='▶ Chant Along';
+  var words=shlokas[curShloka]?shlokas[curShloka].words:[];
+  words.forEach(function(_,j){var el=$('kw'+j);if(el)el.className='';});
+}
+function markShlokaDone(){
+  if(!state.shlokasDone[curShloka]){
+    state.shlokasDone[curShloka]=true;addPoints(20);toast('⭐ +20 points!');
+  }
+  stopKaraoke();renderShlokaList();checkBadges();go('scr-shlokas');
+}
+
+/* ---------- story ---------- */
+var storyIdx=0;
+function showStoryPage(i){
+  storyIdx=i;
+  var p=storyPages[i];
+  $('story-card').innerHTML='<div class="story-art">'+p.art+'</div><p>'+p.text+'</p>';
+  $('story-dots').innerHTML=storyPages.map(function(_,j){return '<div class="dot'+(j===i?' on':'')+'"></div>';}).join('');
+  $('story-prev').style.visibility=i===0?'hidden':'visible';
+  $('story-next').textContent=i===storyPages.length-1?'Finish ⭐':'Next ›';
+}
+function storyNav(d){
+  var n=storyIdx+d;
+  if(n>=storyPages.length){
+    if(!state.storyDone){state.storyDone=true;addPoints(30);toast('⭐ +30! Story complete!');}
+    checkBadges();go('scr-home');return;
+  }
+  if(n<0)n=0;
+  showStoryPage(n);
+}
+
+/* ---------- quiz ---------- */
+var qOrder=[],qIdx=0,qScore=0,qLocked=false;
+function startQuiz(){
+  qOrder=quiz.map(function(_,i){return i;}).sort(function(){return Math.random()-.5;}).slice(0,5);
+  qIdx=0;qScore=0;
+  renderQuestion();go('scr-quiz');
+}
+function renderQuestion(){
+  qLocked=false;
+  var q=quiz[qOrder[qIdx]];
+  $('q-bar').style.width=(qIdx/5*100)+'%';
+  var h='<div class="q-text">Q'+(qIdx+1)+'. '+q.q+'</div>';
+  q.opts.forEach(function(o,i){
+    h+='<button class="opt" onclick="answer(this,'+i+')">'+o+'</button>';
+  });
+  h+='<div class="feedback" id="q-fb"></div>';
+  $('quiz-body').innerHTML=h;
+}
+function answer(el,i){
+  if(qLocked)return;qLocked=true;
+  var q=quiz[qOrder[qIdx]];
+  var opts=document.querySelectorAll('.opt');
+  opts[q.a].classList.add('correct');
+  if(i===q.a){qScore++;addPoints(10);$('q-fb').style.color='var(--green)';$('q-fb').textContent='✅ '+q.why;}
+  else{el.classList.add('wrong');$('q-fb').style.color='var(--red)';$('q-fb').textContent='💡 '+q.why;}
+  setTimeout(function(){
+    qIdx++;
+    if(qIdx>=5){showResult();}else{renderQuestion();}
+  },1900);
+}
+function showResult(){
+  $('q-bar').style.width='100%';
+  if(qScore>state.quizBest)state.quizBest=qScore;
+  checkBadges();
+  var emo=qScore>=5?'🏆':qScore>=3?'🌟':'💪';
+  var msg=qScore>=5?'Perfect! You are a Quiz Champ!':qScore>=3?'Great job! Keep learning!':'Good try! Read the stories and try again!';
+  $('result-body').innerHTML='<div class="big">'+emo+'</div>'
+    +'<h2>'+qScore+' / 5 correct</h2>'
+    +'<p style="color:#8a7663;margin-bottom:6px">'+msg+'</p>'
+    +'<p style="font-weight:700;color:var(--saffron-deep)">⭐ +'+(qScore*10)+' points earned</p>'
+    +'<div class="badge-row"><div class="badge'+(state.quizBest>=5?'':' locked')+'"><span class="b-icon">🏆</span>Quiz Champ</div></div>'
+    +'<button class="btn btn-primary btn-block" onclick="startQuiz()" style="margin-bottom:10px">Play Again 🔄</button>'
+    +'<button class="btn btn-ghost btn-block" onclick="go(\'scr-home\')">Home 🏠</button>';
+  go('scr-result');
+}
+
+/* ---------- full Gita library ---------- */
+var curCh=1,curV=1;
+function openLibrary(){
+  if(typeof GITA==='undefined'){toast('Library data (verses.js) not found next to this file');return;}
+  var h='';
+  GITA.ch.forEach(function(c){
+    h+='<div class="card lib-item" onclick="openChapter('+c.n+')">'
+      +'<div class="ch-num">'+c.n+'</div>'
+      +'<div><h3>'+c.tr+'</h3><p>'+c.mean+' · '+c.count+' shlokas</p></div>'
+      +'<span class="arrow">›</span></div>';
+  });
+  $('lib-chapters').innerHTML=h;
+  go('scr-library');
+}
+function openChapter(n){
+  curCh=n;
+  var c=GITA.ch[n-1];
+  $('chapter-head').innerHTML='<h2>Ch '+c.n+' · '+c.tr+'</h2>'
+    +'<p class="subtitle">'+c.name+' — "'+c.mean+'" · tap a shloka</p>';
+  var h='';
+  GITA.v[n].forEach(function(vs){
+    h+='<button class="verse-btn" onclick="openVerse('+n+','+vs.v+')">'+vs.v+'</button>';
+  });
+  $('verse-grid').innerHTML=h;
+  go('scr-chapter');
+}
+var lkTimer=null,lkIdx=0,lkWords=[];
+function openVerse(c,v){
+  stopLibKaraoke();
+  curCh=c;curV=v;
+  var list=GITA.v[c];
+  var vs=list.find(function(x){return x.v===v;});
+  if(!vs)return;
+  lkWords=vs.t.replace(/\s+/g,' ').trim().split(' ');
+  var wordsHtml=lkWords.map(function(w,j){return '<span id="lkw'+j+'">'+w+'</span>';}).join(' ');
+  var h='<h2>BG '+c+'.'+v+' <span style="font-size:.8rem;color:#b09a82">· '+GITA.ch[c-1].tr+'</span></h2>'
+    +'<div class="sanskrit"><div class="dev" style="white-space:pre-line">'+vs.d+'</div>'
+    +'<div class="karaoke" id="lib-karaoke">'+wordsHtml+'</div></div>'
+    +'<div class="controls">'
+    +'<button class="btn btn-primary" id="lkBtn" onclick="toggleLibKaraoke()">▶ Chant Along</button>'
+    +'<div class="speed">🐢<input type="range" id="lkspeed" min="300" max="900" value="550" step="50">🐇</div>'
+    +'</div>'
+    +'<div class="card meaning-box"><h4>💛 Meaning</h4><p>'+vs.e+'</p></div>'
+    +'<div class="verse-nav">'
+    +(v>1||c>1?'<button class="btn btn-ghost" onclick="navVerse(-1)">‹ Prev</button>':'')
+    +(v<list.length||c<18?'<button class="btn btn-primary" onclick="navVerse(1)">Next ›</button>':'')
+    +'</div>';
+  $('verse-body').innerHTML=h;
+  go('scr-verse');
+}
+function navVerse(d){
+  var list=GITA.v[curCh];
+  var i=list.findIndex(function(x){return x.v===curV;})+d;
+  if(i<0){if(curCh>1){curCh--;var p=GITA.v[curCh];openVerse(curCh,p[p.length-1].v);}return;}
+  if(i>=list.length){if(curCh<18){curCh++;openVerse(curCh,GITA.v[curCh][0].v);}return;}
+  openVerse(curCh,list[i].v);
+}
+function toggleLibKaraoke(){
+  if(lkTimer){stopLibKaraoke();return;}
+  lkIdx=0;$('lkBtn').textContent='⏸ Pause';
+  function step(){
+    lkWords.forEach(function(_,j){
+      var el=$('lkw'+j);if(!el)return;
+      el.className=j<lkIdx?'sung':(j===lkIdx?'hl':'');
+    });
+    if(lkIdx>=lkWords.length){stopLibKaraoke();toast('🎵 Beautiful chanting!');return;}
+    lkIdx++;
+    lkTimer=setTimeout(step,1200-parseInt($('lkspeed').value,10));
+  }
+  step();
+}
+function stopLibKaraoke(){
+  if(lkTimer){clearTimeout(lkTimer);lkTimer=null;}
+  var b=$('lkBtn');if(b)b.textContent='▶ Chant Along';
+  lkWords.forEach(function(_,j){var el=$('lkw'+j);if(el)el.className='';});
+}
+
+/* init */
+renderShlokaList();
+</script>
+</body>
+</html>
